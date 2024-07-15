@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS SNS Management</title>
+</head>
+<body style="font-family: Monospace; margin: 0; padding: 20px; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div style="max-width: 800px; background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); text-align: center;">
+        <h1 style="margin-bottom: 30px; color: #333;">AWS SNS Management</h1>
+
+        <div style="margin-bottom: 40px;">
+            <h2 style="color: #007bff; margin-bottom: 20px; border-bottom: 2px solid #007bff; padding-bottom: 10px;">Create Topic</h2>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="topic_name" placeholder="Topic Name" style="width: calc(100% - 40px); padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; font-family: Monospace;">
+                <button onclick="createTopic()" style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s; font-family: Monospace;">Create Topic</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 40px;">
+            <h2 style="color: #007bff; margin-bottom: 20px; border-bottom: 2px solid #007bff; padding-bottom: 10px;">List Topics</h2>
+            <button onclick="listTopics()" style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s; font-family: Monospace;">List Topics</button>
+            <ul id="topics_list" style="list-style-type: none; padding: 0; margin-top: 20px;"></ul>
+        </div>
+
+        <div style="margin-bottom: 40px;">
+            <h2 style="color: #007bff; margin-bottom: 20px; border-bottom: 2px solid #007bff; padding-bottom: 10px;">Publish Message</h2>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="topic_arn" placeholder="Topic ARN" style="width: calc(100% - 40px); padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; font-family: Monospace;">
+                <textarea id="message" placeholder="Message" style="width: calc(100% - 40px); padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;"></textarea>
+                <button onclick="publishMessage()" style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s; font-family: Monospace;">Publish Message</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 40px;">
+            <h2 style="color: #007bff; margin-bottom: 20px; border-bottom: 2px solid #007bff; padding-bottom: 10px;">Delete Topic</h2>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                <input type="text" id="delete_topic_arn" placeholder="Topic ARN" style="width: calc(100% - 40px); padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; font-family: Monospace;">
+                <button onclick="deleteTopic()" style="padding: 10px 20px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s; font-family: Monospace;">Delete Topic</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createTopic() {
+            const topicName = document.getElementById('topic_name').value.trim();
+
+            if (!topicName) {
+                alert('Topic name cannot be empty');
+                return;
+            }
+
+            fetch('/create_topic', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ topic_name: topicName })
+            })
+            .then(response => response.json())
+            .then(data => alert('Topic Created: ' + JSON.stringify(data)))
+            .catch(error => console.error('Error:', error));
+        }
+
+        function listTopics() {
+            fetch('/list_topics')
+            .then(response => response.json())
+            .then(data => {
+                const topicsList = document.getElementById('topics_list');
+                topicsList.innerHTML = '';
+                if (data.Topics) {
+                    data.Topics.forEach(topic => {
+                        const li = document.createElement('li');
+                        li.textContent = topic.TopicArn;
+                        li.style.margin = '5px 0';
+                        li.style.padding = '10px';
+                        li.style.backgroundColor = '#f1f1f1';
+                        li.style.border = '1px solid #ddd';
+                        li.style.borderRadius = '4px';
+                        topicsList.appendChild(li);
+                    });
+                } else {
+                    alert('No topics found');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function publishMessage() {
+            const topicArn = document.getElementById('topic_arn').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!topicArn || !message) {
+                alert('Topic ARN and message cannot be empty');
+                return;
+            }
+
+            fetch('/publish_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ topic_arn: topicArn, message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Message Published: ' + JSON.stringify(data));
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function deleteTopic() {
+            const topicArn = document.getElementById('delete_topic_arn').value.trim();
+
+            if (!topicArn) {
+                alert('Topic ARN cannot be empty');
+                return;
+            }
+
+            fetch('/delete_topic', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ topic_arn: topicArn })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Topic Deleted: ' + JSON.stringify(data));
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create and Delete Load Balancer</title>
+    <style>
+        body {
+    font-family: Monospace;
+    margin: 20px;
+    position: relative;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+h1 {
+    color: #333;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #555;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+}
+
+input, select, button {
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 300px;
+}
+
+button {
+    margin-top: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-family: Monospace;
+    width: 200px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Load Balancer Management</h1>
+    
+    <section>
+        <h2>Create Load Balancer</h2>
+        <form id="lb-create-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="subnets">Subnets (comma-separated):</label>
+            <input type="text" id="subnets" name="subnets" required>
+            
+            <label for="security_groups">Security Groups (comma-separated):</label>
+            <input type="text" id="security_groups" name="security_groups">
+            
+            <label for="scheme">Scheme:</label>
+            <select id="scheme" name="scheme">
+                <option value="internet-facing">Internet-facing</option>
+                <option value="internal">Internal</option>
+            </select>
+            
+            <label for="tags">Tags (key=value, comma-separated):</label>
+            <input type="text" id="tags" name="tags">
+            
+            <button type="submit">Create LB </button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Delete Load Balancer</h2>
+        <form id="lb-delete-form">
+            <label for="load_balancer_arn">Load Balancer ARN:</label>
+            <input type="text" id="load_balancer_arn" name="load_balancer_arn" required>
+            
+            <button type="submit">Delete LB</button>
+        </form>
+    </section>
+    
+    <script>
+        document.getElementById('lb-create-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const subnets = document.getElementById('subnets').value.split(',');
+    const securityGroups = document.getElementById('security_groups').value.split(',');
+    const scheme = document.getElementById('scheme').value;
+    const tagsInput = document.getElementById('tags').value.split(',');
+    const tags = tagsInput.map(tag => {
+        const [Key, Value] = tag.split('=');
+        return { Key, Value };
+    });
+
+    const data = {
+        name,
+        subnets,
+        security_groups: securityGroups,
+        scheme,
+        tags
+    };
+
+    fetch('/create-load-balancer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Load balancer created successfully!');
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        alert('Error creating load balancer.');
+        console.error('Error:', error);
+    });
+});
+
+document.getElementById('lb-delete-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const loadBalancerArn = document.getElementById('load_balancer_arn').value;
+
+    const data = {
+        load_balancer_arn: loadBalancerArn
+    };
+
+    fetch('/delete-load-balancer', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Load balancer deleted successfully!');
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        alert('Error deleting load balancer.');
+        console.error('Error:', error);
+    });
+});
+
+    </script>
+</body>
+</html>

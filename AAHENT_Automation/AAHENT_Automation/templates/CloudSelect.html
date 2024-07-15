@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        /* Your existing CSS */
+        body {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            min-height: 400px;
+            background-color: #F0F4F9;
+        }
+
+        .block-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 32px;
+            transition: 250ms;
+            perspective: 500px;
+        }
+
+        .btn-back {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            width: inherit;
+            height: inherit;
+            border-radius: 32px;
+            transition: 250ms;
+            transform-style: preserve-3d;
+            transform-origin: bottom right;
+            transform: rotateZ(15deg);
+            will-change: transform;
+            box-shadow: 16px 0 40px #e4e4e4;
+        }
+
+        .btn-back-1 {
+            background: #35485f ;
+        }
+
+        .btn-back-2 {
+            background: #d6cbd3;
+        }
+
+        .btn-back-3 {
+            background: #e3eaa7;
+        }
+
+        .btn-front {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            width: inherit;
+            height: inherit;
+            border-radius: 32px;
+            background-color: #ffffff33;
+            backdrop-filter: blur(20px);
+            transition: 250ms;
+            transform-style: preserve-3d;
+            transform-origin: top left;
+            overflow: hidden;
+        }
+
+        svg.frame {
+            width: inherit;
+            height: inherit;
+        }
+
+        svg.icon {
+            position: absolute;
+            inset: 50% 0 0 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        &:hover {
+            & > .btn-back {
+                transform: translateZ(20px) rotateZ(15deg) rotateX(-20deg) rotateY(-20deg);
+            }
+
+            & > .btn-front {
+                transform: translateZ(80px) translateY(-5px) rotateX(15deg) rotateY(15deg);
+            }
+        }
+
+        h1 {
+            font-family: Monospace;
+            position: Relative;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="block-container" id="aws-block">
+        <div class="btn-back btn-back-1"></div>
+        <div class="btn-front">
+            <svg class="frame">
+                <image href="../static/logo/aws.256x153.png" width="120" height="120" />
+                <rect rx="32" stroke="url(#gradient-half)" />
+            </svg>
+        </div>
+    </div>
+    <div class="block-container">
+        <div class="btn-back btn-back-2"></div>
+        <div class="btn-front">
+            <svg class="frame">
+                <a href="https://cloud.google.com/" target="_blank">
+                    <image href="../static/logo/google-cloud.svg" width="115" height="110" />
+                </a>
+                <rect rx="32" stroke="url(#gradient-half)" />
+            </svg>
+        </div>
+    </div>
+    <div class="block-container">
+        <div class="btn-back btn-back-3"></div>
+        <div class="btn-front">
+            <svg class="frame">
+                <a href="https://login.microsoftonline.com/" target="_blank">
+                    <image href="../static/logo/microsoftazure.png" width="110" height="100" />
+                </a>
+                <rect rx="32" stroke="url(#gradient-half)" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- AWS Credentials Modal -->
+    <div class="modal fade" id="awsModal" tabindex="-1" role="dialog" aria-labelledby="awsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="awsModalLabel">AWS Credentials</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="aws-form">
+                        <div class="form-group">
+                            <label for="access_key_id">ACCESS_KEY_ID</label>
+                            <input type="text" class="form-control" id="access_key_id" name="access_key_id" placeholder="ACCESS_KEY_ID" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="secret_access_key">SECRET_ACCESS_KEY</label>
+                            <input type="text" class="form-control" id="secret_access_key" name="secret_access_key" placeholder="SECRET_ACCESS_KEY" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="region">REGION</label>
+                            <input type="text" class="form-control" id="region" name="region" placeholder="REGION" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-primary" id="configure-btn">Configure</button>
+                        <button type="button" class="btn btn-primary" id="done-btn">Already Done</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <svg style="visibility: hidden; width: 0; height: 0;">
+        <defs>
+            <linearGradient id="gradient-full" x1="0%" y1="0%" x2="120%" y2="120%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="100%" stop-color="#ffffff00" />
+            </linearGradient>
+            <linearGradient id="gradient-half" x1="-50%" y1="-50%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="100%" stop-color="#ffffff00" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <script>
+        document.getElementById('aws-block').addEventListener('click', function() {
+            $('#awsModal').modal('show');
+        });
+
+        document.getElementById('aws-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(event.target);
+            fetch('/save-aws-credentials', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json()).then(data => {
+                if (data.message === 'Credentials saved successfully') {
+                    window.location.href = data.redirect;
+                } else {
+                    alert('Failed to save credentials');
+                }
+            });
+        });
+
+        document.getElementById('configure-btn').addEventListener('click', function() {
+            window.location.href = 'https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html';
+        });
+
+        document.getElementById('done-btn').addEventListener('click', function() {
+            $('#awsModal').modal('hide');
+        });
+    </script>
+</body>
+</html>

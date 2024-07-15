@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Cloud</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            font-family: Monospace;
+            background: #F0F4F9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background 0.5s;
+            background-image: radial-gradient(black 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50, #4a4a4a);
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+            transition: color 0.5s;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 70px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            transition: background-color 0.5s, box-shadow 0.5s;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .tab:hover {
+            transform: scale(1.1);
+        }
+
+        .tab.active {
+            background-color: #BD8E00;
+            color: #fff;
+            opacity: 1.5;
+        }
+
+        .form-container {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: 60%;
+            padding: 15px;
+            margin-bottom: 10px;
+            position: inherit;
+            border: none;
+            border-bottom: 2px solid #ccc;
+        }
+
+
+
+
+        .form-container button {
+
+            padding: 10px;
+            background-color: #BD8E00;
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-container button:hover {
+            transform: scale(1.05);
+        }
+
+        .link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .link a {
+            color: #6c63ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+            color: #5848c2;
+        }
+        img {
+            padding: 30px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+
+
+
+<div class="container">
+    <img src="../static/Logo.v1.png" height="100px">
+
+        <div class="tabs">
+            <span class="tab active" onclick="showForm('signin')">Sign In</span>
+            <span class="tab" onclick="showForm('signup')">Sign Up</span>
+        </div>
+
+
+        <div id="signin" class="form-container active">
+            <form action="{{ url_for('signin') }}" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <div class="link">
+                <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+            </div>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+        <div id="signup" class="form-container">
+            <form action="{{ url_for('signup') }}" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Create Account</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function showForm(form) {
+            document.querySelectorAll('.form-container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(form).classList.add('active');
+            document.querySelector(`.tab[onclick="showForm('${form}')"]`).classList.add('active');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const img = document.querySelector('.dark-mode-toggle img');
+            if (document.body.classList.contains('dark-mode')) {
+                img.src = "https://img.icons8.com/ios-filled/50/ffffff/sun--v1.png";
+            } else {
+                img.src = "https://img.icons8.com/ios-filled/50/000000/moon-satellite.png";
+            }
+        }
+
+            window.onload = function() {
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            window.alert("{{ message }}");
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            }
+    </script>
+</body>
+</html>

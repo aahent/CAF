@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS EC2 Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AWS EC2 Manager</h1>
+
+        <div class="section">
+            <h2>Launch Instance</h2>
+            <form id="launchForm">
+                <div class="form-group">
+                    <label for="ami_id">AMI ID:</label>
+                    <input type="text" id="ami_id" name="ami_id">
+                </div>
+                <div class="form-group">
+                    <label for="instance_type">Instance Type:</label>
+                    <input type="text" id="instance_type" name="instance_type">
+                </div>
+                <div class="form-group">
+                    <label for="count">Count:</label>
+                    <input type="number" id="count" name="count" min="1" value="1">
+                </div>
+                <button type="submit" class="btn">Launch Instance</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>List Instances</h2>
+            <button id="listInstancesButton" class="btn">List Instances</button>
+            <div id="instancesList" class="list-container"></div>
+        </div>
+
+        <div class="section">
+            <h2>Instance Operations</h2>
+            <form id="instanceOperationForm">
+                <div class="form-group">
+                    <label for="instance_id">Instance ID:</label>
+                    <input type="text" id="instance_id" name="instance_id">
+                </div>
+                <div class="form-group">
+                    <label for="operation">Operation:</label>
+                    <select id="operation" name="operation">
+                        <option value="start">Start</option>
+                        <option value="stop">Stop</option>
+                        <option value="terminate">Terminate</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script src="scriptec2.js"></script>
+</body>
+</html>

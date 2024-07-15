@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon IAM Management</title>
+    <style>
+        body {
+    font-family: Monospace;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+h1 {
+
+    color: Black;
+    padding: 20px 0;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 30%;
+    padding: 10px;
+    background-color: #007bff;
+    font-family: Monospace;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.alert-info {
+    background-color: #2196f3;
+}
+
+.alert-success {
+    background-color: #4CAF50;
+}
+
+.alert-danger {
+    background-color: #f44336;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Amazon IAM Management</h1>
+
+    <div class="container">
+        <h2>Create User</h2>
+        <form id="create-user-form">
+            <label for="create-username">Username:</label>
+            <input type="text" id="create-username" name="username" required>
+            <button type="submit">Create User</button>
+        </form>
+
+        <h2>Delete User</h2>
+        <form id="delete-user-form">
+            <label for="delete-username">Username:</label>
+            <input type="text" id="delete-username" name="username" required>
+            <button type="submit">Delete User</button>
+        </form>
+
+        <h2>List Users</h2>
+        <button id="list-users-button">List Users</button>
+        <div id="user-list"></div>
+
+        <h2>Create Group</h2>
+        <form id="create-group-form">
+            <label for="create-groupname">Group Name:</label>
+            <input type="text" id="create-groupname" name="groupname" required>
+            <button type="submit">Create Group</button>
+        </form>
+
+        <h2>Delete Group</h2>
+        <form id="delete-group-form">
+            <label for="delete-groupname">Group Name:</label>
+            <input type="text" id="delete-groupname" name="groupname" required>
+            <button type="submit">Delete Group</button>
+        </form>
+
+        <h2>List Groups</h2>
+        <button id="list-groups-button">List Groups</button>
+        <div id="group-list"></div>
+    </div>
+
+    <script>
+        function showAlert(message, type = 'info') {
+    const alertBox = document.createElement('div');
+    alertBox.className = `alert alert-${type}`;
+    alertBox.textContent = message;
+
+    // Apply styles to the alert box
+    alertBox.style.position = 'fixed';
+    alertBox.style.top = '20px';
+    alertBox.style.left = '50%';
+    alertBox.style.transform = 'translateX(-50%)';
+    alertBox.style.padding = '10px 20px';
+    alertBox.style.backgroundColor = type === 'success' ? '#4CAF50' : '#f44336';
+    alertBox.style.color = 'white';
+    alertBox.style.borderRadius = '4px';
+    alertBox.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+
+    document.body.prepend(alertBox);
+
+    setTimeout(() => {
+        alertBox.remove();
+    }, 3000);
+}
+
+document.getElementById('create-user-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/create_user', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: formData.get('username')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Create User Response:', data);
+        if (data.error) {
+            showAlert('Error: ' + data.error, 'danger');
+        } else {
+            showAlert('User created successfully!', 'success');
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('delete-user-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/delete_user', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: formData.get('username')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete User Response:', data);
+        if (data.error) {
+            showAlert('Error: ' + data.error, 'danger');
+        } else {
+            showAlert('User deleted successfully!', 'success');
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('list-users-button').addEventListener('click', function () {
+    fetch('/list_users')
+    .then(response => response.json())
+    .then(data => {
+        console.log('List Users Response:', data);
+        const userList = document.getElementById('user-list');
+        userList.innerHTML = '';
+        data.Users.forEach(user => {
+            const userElement = document.createElement('div');
+            userElement.textContent = user.UserName;
+            userList.appendChild(userElement);
+        });
+        showAlert('Users listed successfully!', 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('create-group-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/create_group', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            groupname: formData.get('groupname')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Create Group Response:', data);
+        if (data.error) {
+            showAlert('Error: ' + data.error, 'danger');
+        } else {
+            showAlert('Group created successfully!', 'success');
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('delete-group-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/delete_group', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            groupname: formData.get('groupname')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete Group Response:', data);
+        if (data.error) {
+            showAlert('Error: ' + data.error, 'danger');
+        } else {
+            showAlert('Group deleted successfully!', 'success');
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('list-groups-button').addEventListener('click', function () {
+    fetch('/list_groups')
+    .then(response => response.json())
+    .then(data => {
+        console.log('List Groups Response:', data);
+        const groupList = document.getElementById('group-list');
+        groupList.innerHTML = '';
+        data.Groups.forEach(group => {
+            const groupElement = document.createElement('div');
+            groupElement.textContent = group.GroupName;
+            groupList.appendChild(groupElement);
+        });
+        showAlert('Groups listed successfully!', 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+    </script>
+</body>
+</html>
+

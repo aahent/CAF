@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeBuild Management</title>
+    <style>
+        body {
+    font-family: Monospace;
+    margin: 20px;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    margin-top: 5px;
+    padding: 5px;
+    width: 300px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #f8f9fa;
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+</style>
+</head>
+<body>
+    <h1>Amazon CodeBuild Management</h1>
+    <div>
+        <h2>Create Project</h2>
+        <form id="createProjectForm">
+            <label for="projectName">Project Name:</label>
+            <input type="text" id="projectName" name="projectName" required>
+            <label for="sourceType">Source Type:</label>
+            <input type="text" id="sourceType" name="sourceType" required>
+            <label for="sourceLocation">Source Location:</label>
+            <input type="text" id="sourceLocation" name="sourceLocation" required>
+            <label for="serviceRole">Service Role ARN:</label>
+            <input type="text" id="serviceRole" name="serviceRole" required>
+            <button type="submit">Create Project</button>
+        </form>
+    </div>
+    <div>
+        <h2>Delete Project</h2>
+        <form id="deleteProjectForm">
+            <label for="deleteProjectName">Project Name:</label>
+            <input type="text" id="deleteProjectName" name="deleteProjectName" required>
+            <button type="submit">Delete Project</button>
+        </form>
+    </div>
+    <div>
+        <h2>List Projects</h2>
+        <button id="listProjectsButton">List Projects</button>
+        <ul id="projectsList"></ul>
+    </div>
+    <script>
+        document.getElementById('createProjectForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const projectName = document.getElementById('projectName').value;
+    const sourceType = document.getElementById('sourceType').value;
+    const sourceLocation = document.getElementById('sourceLocation').value;
+    const serviceRole = document.getElementById('serviceRole').value;
+
+    fetch('/create_project', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: projectName,
+            source: {
+                type: sourceType,
+                location: sourceLocation
+            },
+            serviceRole: serviceRole
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Project created successfully!');
+    })
+    .catch(error => {
+        alert('Error creating project: ' + error.message);
+    });
+});
+
+document.getElementById('deleteProjectForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const projectName = document.getElementById('deleteProjectName').value;
+
+    fetch('/delete_project', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: projectName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Project deleted successfully!');
+    })
+    .catch(error => {
+        alert('Error deleting project: ' + error.message);
+    });
+});
+
+document.getElementById('listProjectsButton').addEventListener('click', function() {
+    fetch('/list_projects', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const projectsList = document.getElementById('projectsList');
+        projectsList.innerHTML = '';
+        data.projects.forEach(project => {
+            const li = document.createElement('li');
+            li.textContent = project;
+            projectsList.appendChild(li);
+        });
+    })
+    .catch(error => {
+        alert('Error listing projects: ' + error.message);
+    });
+});
+
+    </script>
+</body>
+</html>

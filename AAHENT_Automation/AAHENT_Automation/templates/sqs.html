@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create SQS Queue</title>
+    <style>
+        body {
+            font-family: Monospace;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: radial-gradient(black 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px;
+            padding: 50px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button {
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            font-family: Monospace;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #responseMessage {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Amazon SQS Queue</h2>
+        <form id="sqsForm">
+            <label for="queueName">Queue Name:</label>
+            <input type="text" id="queueName" name="queue_name" required>
+
+            <label for="delaySeconds">Delay Seconds (Optional):</label>
+            <input type="text" id="delaySeconds" name="attributes[DelaySeconds]">
+
+            <label for="maxMessageSize">Maximum Message Size (Optional):</label>
+            <input type="text" id="maxMessageSize" name="attributes[MaximumMessageSize]">
+
+            <label for="messageRetention">Message Retention Period (Optional):</label>
+            <input type="text" id="messageRetention" name="attributes[MessageRetentionPeriod]">
+
+            <label for="environmentTag">Environment Tag (Optional):</label>
+            <input type="text" id="environmentTag" name="tags[Environment]">
+
+            <label for="ownerTag">Owner Tag (Optional):</label>
+            <input type="text" id="ownerTag" name="tags[Owner]">
+
+            <button type="submit">Create Queue</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('sqsForm');
+            const responseMessage = document.getElementById('responseMessage');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const jsonData = {};
+
+                for (const [key, value] of formData.entries()) {
+                    if (value) {
+                        if (key.endsWith(']')) {
+                            const mainKey = key.split('[')[0];
+                            const subKey = key.split('[')[1].replace(']', '');
+                            if (!jsonData[mainKey]) {
+                                jsonData[mainKey] = {};
+                            }
+                            jsonData[mainKey][subKey] = value;
+                        } else {
+                            jsonData[key] = value;
+                        }
+                    }
+                }
+
+                fetch('/create_queue', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    responseMessage.innerHTML = `Queue created successfully. Queue URL: <a href="${data.queue_url}" target="_blank">${data.queue_url}</a>`;
+                    form.reset();
+                })
+                .catch(error => {
+                    responseMessage.innerHTML = `Error: ${error.message}`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

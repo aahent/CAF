@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tag-Cloud</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:900i');
+
+*{
+  padding: 0;
+  }
+
+body {
+    overflow: hidden;
+}
+
+
+#clouds{
+    padding: 100px 0;
+    background: #c9dbe9;
+    background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+    background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
+    background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+}
+
+.cloud {
+    width: 200px; height: 60px;
+    background: #fff;
+
+    border-radius: 200px;
+    -moz-border-radius: 200px;
+    -webkit-border-radius: 200px;
+
+    position: relative;
+}
+
+.cloud:before, .cloud:after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    width: 100px; height: 80px;
+    position: absolute; top: -15px; left: 10px;
+
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+    -moz-transform: rotate(30deg);
+}
+
+.cloud:after {
+    width: 120px; height: 120px;
+    top: -55px; left: auto; right: 15px;
+}
+
+/*Time to animate*/
+.x1 {
+    -webkit-animation: moveclouds 15s linear infinite;
+    -moz-animation: moveclouds 15s linear infinite;
+    -o-animation: moveclouds 15s linear infinite;
+}
+
+/*variable speed, opacity, and position of clouds for realistic effect*/
+.x2 {
+    left: 200px;
+
+    -webkit-transform: scale(0.6);
+    -moz-transform: scale(0.6);
+    transform: scale(0.6);
+    opacity: 0.6; /*opacity proportional to the size*/
+
+    /*Speed will also be proportional to the size and opacity*/
+    /*More the speed. Less the time in 's' = seconds*/
+    -webkit-animation: moveclouds 25s linear infinite;
+    -moz-animation: moveclouds 25s linear infinite;
+    -o-animation: moveclouds 25s linear infinite;
+}
+
+.x3 {
+    left: -250px; top: -200px;
+
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    transform: scale(0.8);
+    opacity: 0.8;
+    -webkit-animation: moveclouds 20s linear infinite;
+    -moz-animation: moveclouds 20s linear infinite;
+    -o-animation: moveclouds 20s linear infinite;
+}
+
+.x4 {
+    left: 470px; top: -250px;
+
+    -webkit-transform: scale(0.75);
+    -moz-transform: scale(0.75);
+    transform: scale(0.75);
+    opacity: 0.75; /*opacity proportional to the size*/
+
+    -webkit-animation: moveclouds 18s linear infinite;
+    -moz-animation: moveclouds 18s linear infinite;
+    -o-animation: moveclouds 18s linear infinite;
+}
+
+.x5 {
+    left: -150px; top: -150px;
+
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    transform: scale(0.8);
+    opacity: 0.8; /*opacity proportional to the size*/
+
+    -webkit-animation: moveclouds 20s linear infinite;
+    -moz-animation: moveclouds 20s linear infinite;
+    -o-animation: moveclouds 20s linear infinite;
+}
+
+@-webkit-keyframes moveclouds {
+    0% {margin-left: 1000px;}
+    100% {margin-left: -1000px;}
+}
+@-moz-keyframes moveclouds {
+    0% {margin-left: 1000px;}
+    100% {margin-left: -1000px;}
+}
+@-o-keyframes moveclouds {
+    0% {margin-left: 1000px;}
+    100% {margin-left: -1000px;}
+}
+
+input[type="checkbox"]:checked + label::before {
+    animation-name: switchBgColorDefault;
+    animation-fill-mode: forwards;
+    animation-duration: 0.25s;
+    animation-timing-function: steps(1);
+}
+
+input[type="checkbox"]:checked + label::after,
+input:checked + label span {
+    animation-name: switchColorDefault;
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+input[type="checkbox"].active:checked + label::before {
+    animation-name:switchOriginalcolor;
+}
+input[type="checkbox"]:checked + label::before {
+    animation-name:switchBgColorDefault;
+}
+input[type="checkbox"] + label::before {
+    animation-name:switchOriginalcolor;
+}
+input + label::after, input + label span{
+    transform: translateX(0px);
+}
+#reDirect {
+
+    outline: none;
+    width: 100%;
+}
+@keyframes switchOriginalcolor {
+    0% {
+       background-position: 8px -55px;
+       background-color: #007236;
+    }
+
+    100% {
+       background-position: 5px 0px;
+       background-color: #122433;
+    }
+}
+
+@keyframes switchBgColorDefault {
+    0% {
+       background-position: 5px 0px;
+    }
+
+    100% {
+       background-position: 8px -55px;
+       background-color: #007236;
+    }
+}
+
+@keyframes switchColorDefault {
+    0% {
+       transform: translateX(0);
+    }
+    50% {
+       transform: translateX(-70px);
+    }
+    100% {
+       transform: translateX(0);
+    }
+}
+
+
+    @color: #5bc0eb;
+
+* {
+    box-sizing: border-box;
+}
+
+
+@keyframes move-dot1 {
+    0% {
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    20% {
+        transform: translateX(-50%) translateY(30%);
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(30%);
+    }
+}
+
+
+@keyframes move-dot2 {
+    0% {
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    15% {
+        transform: translateX(-50%) translateY(-10%);
+    }
+
+    30% {
+        transform: translateX(-10%) translateY(-10%);
+    }
+
+    100% {
+        transform: translateX(-10%) translateY(-10%);
+    }
+}
+
+
+body {
+    background: #eee;
+}
+
+
+.animation-example {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    height: 90vmin;
+    width: 90vmin;
+
+    > .item {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        height: 50%;
+        width: 50%;
+        transform: translateX(-50%);
+        transform-origin: 50% 100%;
+        pointer-events: none;
+    }
+
+    > .item:nth-child(2) {
+        transform: translateX(-50%) rotate(90deg);
+    }
+
+    > .item:nth-child(3) {
+        transform: translateX(-50%) rotate(180deg);
+    }
+
+    > .item:nth-child(4) {
+        transform: translateX(-50%) rotate(270deg);
+    }
+
+    > .item > .line {
+        height: 100%;
+        width: ~"calc(50% + 1px)";
+        border-right: 2px dashed @color;
+    }
+
+    > .item > .dot {
+        position: absolute;
+        left: 50%;
+        top: 10%;
+        transform: translateX(-50%) translateY(-50%);
+        height: 100%;
+        width: 100%;
+        animation: move-dot1 5.5s linear infinite;
+    }
+
+    > .item > .dot::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        height: 5%;
+        width: 5%;
+        background: #fff;
+        border: 2px solid @color;
+        border-radius: 50%;
+    }
+
+    > .item > .circle {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 20%;
+        width: 20%;
+        border-radius: 50%;
+        background: @color;
+    }
+
+    > .item.-type2 {
+        top: 0;
+        left: 0;
+        transform: none;
+        transform-origin: 100% 100%;
+    }
+
+    > .item.-type2:nth-child(5) {
+        transform: scaleX(-100%);
+    }
+
+    > .item.-type2:nth-child(6) {
+        transform: scaleX(-100%) scaleY(-100%);
+    }
+
+    > .item.-type2:nth-child(7) {
+        transform: scaleY(-100%);
+    }
+
+    > .item.-type2 > .line {
+        position: absolute;
+        top: 30%;
+        left: ~"calc(30% - 1px)";
+        width: 70%;
+        height: 40%;
+        border-right: none;
+        border-left: 2px dashed @color;
+        border-bottom: 2px dashed @color;
+    }
+
+    > .item.-type2 > .dot {
+        top: 30%;
+        left: 30%;
+        animation: move-dot2 4s linear infinite;
+    }
+
+    > .item.-type2 > .circle {
+        top: 30%;
+        left: 30%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    > .item:nth-of-type(1) > .dot {
+        animation-delay: 0;
+    }
+
+    > .item:nth-of-type(7) > .dot {
+        animation-delay: .5s;
+    }
+
+    > .item:nth-of-type(2) > .dot {
+        animation-delay: 1s;
+    }
+
+    > .item:nth-of-type(6) > .dot {
+        animation-delay: 1.5s;
+    }
+
+    > .item:nth-of-type(3) > .dot {
+        animation-delay: 2s;
+    }
+
+    > .item:nth-of-type(5) > .dot {
+        animation-delay: 2.5s;
+    }
+
+    > .item:nth-of-type(4) > .dot {
+        animation-delay: 3s;
+    }
+
+    > .item:nth-of-type(8) > .dot {
+        animation-delay: 3.5s;
+    }
+
+    > .center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        height: 50%;
+        width: 50%;
+    }
+
+    > .center > .circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        border-radius: 50%;
+    }
+
+    > .center > .circle:nth-child(1) {
+        height: 100%;
+        width: 100%;
+        background: #fff;
+        box-shadow: 0 0 3vmin rgba(0, 0, 0, .1);
+    }
+
+    > .center > .circle:nth-child(2) {
+        height: 80%;
+        width: 80%;
+        border: 2px solid @color;
+    }
+
+    > .center > .circle:nth-child(3) {
+        height: 50%;
+        width: 50%;
+        background: @color;
+    }
+
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+.cta {
+    display: flex;
+    padding: 10px 45px;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    color: white;
+    background: #6225E6;
+    transition: 1s;
+    box-shadow: 6px 6px 0 black;
+    transform: skewX(-15deg);
+}
+.cta:focus {
+   outline: none;
+}
+.cta:hover {
+    transition: 0.5s;
+    box-shadow: 10px 10px 0 #FBC638;
+}
+.cta span:nth-child(2) {
+    transition: 0.5s;
+    margin-right: 0px;
+}
+.cta:hover  span:nth-child(2) {
+    transition: 0.5s;
+    margin-right: 45px;
+}
+span {
+    transform: skewX(15deg)
+  }
+  span:nth-child(2) {
+    width: 20px;
+    margin-left: 30px;
+    position: relative;
+    top: 12%;
+  }
+
+
+
+path.one {
+    transition: 0.4s;
+    transform: translateX(-60%);
+}
+path.two {
+    transition: 0.5s;
+    transform: translateX(-30%);
+}
+.cta:hover path.three {
+    animation: color_anim 1s infinite 0.2s;
+}
+.cta:hover path.one {
+    transform: translateX(0%);
+    animation: color_anim 1s infinite 0.6s;
+}
+.cta:hover path.two {
+    transform: translateX(0%);
+    animation: color_anim 1s infinite 0.4s;
+}
+
+
+@keyframes color_anim {
+    0% {
+        fill: white;
+    }
+    50% {
+        fill: #FBC638;
+    }
+    100% {
+        fill: white;
+    }
+}
+
+</style>
+
+    <body>
+<img src="../static/Logo.v1.png" height="70px">
+
+<div id="clouds">
+    <div class="cloud x1"></div>
+
+    <div class="cloud x2"></div>
+    <div class="cloud x3"></div>
+    <div class="cloud x4"></div>
+    <div class="cloud x5"></div>
+</div>
+
+
+<div class='animation-example'>
+    <div class='item'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item -type2'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item -type2'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item -type2'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='item -type2'>
+        <div class='line'></div>
+        <div class='dot'></div>
+        <div class='circle'></div>
+    </div>
+    <div class='center'>
+        <div class='circle'></div>
+        <div class='circle'></div>
+        <div class='circle'></div>
+    </div>
+</div>
+
+
+
+<div class="wrapper">
+  <a class="cta" href="http://127.0.0.1:5000/index">
+    <span>Explore</span>
+    <span>
+      <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <path class="one" d="M40.1543933,3.89485454 L43.9763149,0.139296592 C44.1708311,-0.0518420739 44.4826329,-0.0518571125 44.6771675,0.139262789 L65.6916134,20.7848311 C66.0855801,21.1718824 66.0911863,21.8050225 65.704135,22.1989893 C65.7000188,22.2031791 65.6958657,22.2073326 65.6916762,22.2114492 L44.677098,42.8607841 C44.4825957,43.0519059 44.1708242,43.0519358 43.9762853,42.8608513 L40.1545186,39.1069479 C39.9575152,38.9134427 39.9546793,38.5968729 40.1481845,38.3998695 C40.1502893,38.3977268 40.1524132,38.395603 40.1545562,38.3934985 L56.9937789,21.8567812 C57.1908028,21.6632968 57.193672,21.3467273 57.0001876,21.1497035 C56.9980647,21.1475418 56.9959223,21.1453995 56.9937605,21.1432767 L40.1545208,4.60825197 C39.9574869,4.41477773 39.9546013,4.09820839 40.1480756,3.90117456 C40.1501626,3.89904911 40.1522686,3.89694235 40.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+          <path class="two" d="M20.1543933,3.89485454 L23.9763149,0.139296592 C24.1708311,-0.0518420739 24.4826329,-0.0518571125 24.6771675,0.139262789 L45.6916134,20.7848311 C46.0855801,21.1718824 46.0911863,21.8050225 45.704135,22.1989893 C45.7000188,22.2031791 45.6958657,22.2073326 45.6916762,22.2114492 L24.677098,42.8607841 C24.4825957,43.0519059 24.1708242,43.0519358 23.9762853,42.8608513 L20.1545186,39.1069479 C19.9575152,38.9134427 19.9546793,38.5968729 20.1481845,38.3998695 C20.1502893,38.3977268 20.1524132,38.395603 20.1545562,38.3934985 L36.9937789,21.8567812 C37.1908028,21.6632968 37.193672,21.3467273 37.0001876,21.1497035 C36.9980647,21.1475418 36.9959223,21.1453995 36.9937605,21.1432767 L20.1545208,4.60825197 C19.9574869,4.41477773 19.9546013,4.09820839 20.1480756,3.90117456 C20.1501626,3.89904911 20.1522686,3.89694235 20.1543933,3.89485454 Z" fill="#FFFFFF"></path>
+          <path class="three" d="M0.154393339,3.89485454 L3.97631488,0.139296592 C4.17083111,-0.0518420739 4.48263286,-0.0518571125 4.67716753,0.139262789 L25.6916134,20.7848311 C26.0855801,21.1718824 26.0911863,21.8050225 25.704135,22.1989893 C25.7000188,22.2031791 25.6958657,22.2073326 25.6916762,22.2114492 L4.67709797,42.8607841 C4.48259567,43.0519059 4.17082418,43.0519358 3.97628526,42.8608513 L0.154518591,39.1069479 C-0.0424848215,38.9134427 -0.0453206733,38.5968729 0.148184538,38.3998695 C0.150289256,38.3977268 0.152413239,38.395603 0.154556228,38.3934985 L16.9937789,21.8567812 C17.1908028,21.6632968 17.193672,21.3467273 17.0001876,21.1497035 C16.9980647,21.1475418 16.9959223,21.1453995 16.9937605,21.1432767 L0.15452076,4.60825197 C-0.0425130651,4.41477773 -0.0453986756,4.09820839 0.148075568,3.90117456 C0.150162624,3.89904911 0.152268631,3.89694235 0.154393339,3.89485454 Z" fill="#FFFFFF"></path>
+        </g>
+      </svg>
+    </span>
+  </a>
+</div>
+
+
+
+<script>
+
+function anim(event){
+    var that=document.getElementById("defaultBtn");
+       setTimeout(function() {
+          window.open("../templates/index.html");
+       }, 250);
+    if(that.classList.contains("active")){
+        that.classList.remove("active");
+    }else{
+       that.classList.add("active");
+    }
+
+}
+
+</script>
+</body>

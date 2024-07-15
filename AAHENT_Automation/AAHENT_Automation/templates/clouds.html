@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>click-cloud</title>
+</head>
+<style>
+
+@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+    --c-text-primary: #282a32;
+    --c-text-secondary: #686b87;
+    --c-text-action: #404089;
+    --c-accent-primary: #434ce8;
+    --c-border-primary: #eff1f6;
+    --c-background-primary: #ffffff;
+    --c-background-secondary: #fdfcff;
+    --c-background-tertiary: #ecf3fe;
+    --c-background-quaternary: #e9ecf4;
+
+}
+
+body {
+    line-height: 1.5;
+    min-height: 100vh;
+    font-family: Raleway;
+    background-color: #f0f4f9;
+    color: var(--c-text-primary);
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+:focus {
+    outline: 0;
+}
+
+.responsive-wrapper {
+    width: 90%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    border-bottom: 1px solid var(--c-border-primary);
+    background-color: var(--c-background-primary);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    & > a {
+        display: none;
+    }
+    @media (max-width: 1200px) {
+        justify-content: space-between;
+        & > a {
+            display: inline-flex;
+        }
+    }
+}
+
+.header-logo {
+    margin-right: 2.5rem;
+    a {
+        display: flex;
+        align-items: center;
+        div {
+            outline: 2px solid;
+            flex-shrink: 0;
+            position: relative;
+            &:after {
+                display: block;
+                content: "";
+                position: absolute;
+                left: 0;
+                top: auto;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                height: 50%;
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+                background-color: rgba(#fff, 0.2);
+                backdrop-filter: blur(4px);
+            }
+        }
+    }
+}
+
+.header-navigation {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: space-between;
+    @media (max-width: 1200px) {
+        display: none;
+    }
+}
+
+.header-navigation-links {
+    display: flex;
+    align-items: center;
+
+    a {
+        text-decoration: none;
+        color: var(--c-text-action);
+        font-weight: 500;
+        transition: 0.15s ease;
+        & + * {
+            margin-left: 1.5rem;
+        }
+
+        &:hover,
+        &:focus {
+            color: var(--c-accent-primary);
+        }
+    }
+}
+
+.header-navigation-actions {
+    display: flex;
+    align-items: center;
+    & > .avatar {
+        margin-left: 0.75rem;
+    }
+    & > .icon-button + .icon-button {
+        margin-left: 0.25rem;
+    }
+
+    & > .button + .icon-button {
+        margin-left: 1rem;
+    }
+}
+
+.button {
+    font: inherit;
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1em;
+    height: 40px;
+    border-radius: 8px;
+    line-height: 1;
+    border: 2px solid var(--c-border-primary);
+    color: var(--c-text-action);
+    font-size: 0.875rem;
+    transition: 0.15s ease;
+    background-color: var(--c-background-primary);
+
+    i {
+        margin-right: 0.5rem;
+        font-size: 1.25em;
+    }
+
+    span {
+        font-weight: 500;
+    }
+
+    &:hover,
+    &:focus {
+        border-color: var(--c-accent-primary);
+        color: var(--c-accent-primary);
+    }
+}
+
+.icon-button {
+    font: inherit;
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    color: var(--c-text-action);
+    transition: 0.15s ease;
+    i {
+        font-size: 1.25em;
+    }
+
+    &:focus,
+    &:hover {
+        background-color: var(--c-background-tertiary);
+        color: var(--c-accent-primary);
+    }
+}
+
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.main {
+    padding-top: 3rem;
+}
+
+.main-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 1.25;
+        @media (max-width: 550px) {
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        background-color: transparent;
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.25em;
+        color: var(--c-text-action);
+        padding: 0;
+        height: 40px;
+    }
+
+
+.horizontal-tabs {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    @media (max-width: 1000px) {
+        scrollbar-width: thin;
+        position: relative;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    a {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        height: 48px;
+        padding: 0 0.25rem;
+        font-weight: 500;
+        color: inherit;
+        border-bottom: 3px solid transparent;
+        text-decoration: none;
+        transition: 0.15s ease;
+        &:hover,
+        &:focus,
+        &.active {
+            color: var(--c-accent-primary);
+            border-bottom-color: var(--c-accent-primary);
+        }
+
+        & + * {
+            margin-left: 1rem;
+        }
+    }
+}
+
+.content-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 3rem;
+    margin-top: -1px;
+    border-top: 1px solid var(--c-border-primary);
+}
+
+.content-header-intro {
+    h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    p {
+        color: var(--c-text-secondary);
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+}
+
+.content-header-actions {
+    a:first-child {
+        @media (min-width: 800px) {
+            display: none;
+        }
+    }
+}
+
+.content {
+    border-top: 1px solid var(--c-border-primary);
+    margin-top: 2rem;
+    display: flex;
+    align-items: flex-start;
+}
+.content-panel {
+    display: none;
+    max-width: 280px;
+    width: 25%;
+    padding: 2rem 1rem 2rem 0;
+    margin-right: 3rem;
+    @media (min-width: 800px) {
+        display: block;
+    }
+}
+
+.vertical-tabs {
+    display: flex;
+    flex-direction: column;
+    a {
+        display: flex;
+        align-items: center;
+        padding: 0.75em 1em;
+        background-color: transparent;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        color: var(--c-text-action);
+        transition: 0.15s ease;
+        &:hover,
+        &:focus,
+        &.active {
+            background-color: var(--c-background-tertiary);
+            color: var(--c-accent-primary);
+        }
+
+        & + * {
+            margin-top: 0.25rem;
+        }
+    }
+}
+
+.content-main {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    flex-grow: 1;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    column-gap: 1.5rem;
+    row-gap: 1.5rem;
+    @media (min-width: 600px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.card {
+    background-color: var(--c-background-primary);
+    box-shadow: 0 3px 3px 0 rgba(#000, 0.05), 0 5px 15px 0 rgba(#000, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.5rem 1.25rem 1rem 1.25rem;
+    div {
+        display: flex;
+        align-items: center;
+
+        span {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            img {
+                max-width: 85%;
+                max-height: 100%;
+            }
+        }
+
+        h3 {
+            margin-left: 0.75rem;
+            font-weight: 500;
+        }
+    }
+}
+
+.toggle {
+    span {
+        display: block;
+        width: 40px;
+        height: 24px;
+        border-radius: 99em;
+        background-color: var(--c-background-quaternary);
+        box-shadow: inset 1px 1px 1px 0 rgba(#000, 0.05);
+        position: relative;
+        transition: 0.15s ease;
+        &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            height: 18px;
+            width: 18px;
+            background-color: var(--c-background-primary);
+            border-radius: 50%;
+            box-shadow: 0 1px 3px 0 rgba(#000, 0.15);
+            transition: 0.15s ease;
+        }
+    }
+
+    input {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+        &:checked + span {
+            background-color: var(--c-accent-primary);
+            &:before {
+                transform: translateX(calc(100% - 2px));
+            }
+        }
+
+        &:focus + span {
+            box-shadow: 0 0 0 4px var(--c-background-tertiary);
+        }
+    }
+}
+
+.card-body {
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+}
+
+.card-footer {
+    margin-top: auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px solid var(--c-border-primary);
+    a {
+        color: var(--c-text-action);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+}
+
+html {
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--c-text-primary);
+        border: 4px solid var(--c-background-primary);
+        border-radius: 99em;
+    }
+}
+.profile-card {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: var(--c-background-primary);
+            border: 1px solid var(--c-border-primary);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 200px;
+            z-index: 1000;
+        }
+.profile-card a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: var(--c-text-primary);
+    border-bottom: 1px solid var(--c-border-primary);
+    }
+
+.profile-card a:last-child {
+  border-bottom: none;
+}
+
+.profile-card a:hover {
+  background: var(--c-background-secondary);
+}
+.avatar-container {
+  position: relative;
+}
+.profile-info {
+    display: contents;
+    align-items: center;
+}
+
+.username {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 0.975rem;
+    font-weight: 500;
+
+    color: var(--c-text-action);
+}
+
+
+</style>
+<body>
+<header class="header">
+        <div class="header-content responsive-wrapper">
+            <div class="header-logo">
+                <a href="https://aahent.com/">
+                    <img src="../static/logo/aahent_logo.v1.png" width="80px">
+                </a>
+            </div>
+            <div class="header-navigation">
+                <nav class="header-navigation-links">
+                    <a href="#">Home</a>
+                    <a href="https://aahent.com/about-us/">About us</a>
+                    <a href="https://aahent.com/case-studies/">Projects</a>
+                    <a href="#">Teams</a>
+                    <a href="https://aahent.com/blogs/">News-letter</a>
+                </nav>
+                <div class="header-navigation-actions">
+
+                         {% if username %}
+                         <div class="profile-info">
+                           <span class="username">{{ username }}</span>
+                          </div>
+                         {% endif %}
+
+
+                    <div class="avatar-container">
+                        <a href="#" class="avatar" id="profile-avatar">
+                            <img src="https://assets.codepen.io/285131/hat-man.png" alt="" />
+                        </a>
+
+                        <div class="profile-card" id="profile-card">
+                            <a href="{{ url_for('index') }}">Sign Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="button">
+                <i class="ph-list-bold"></i>
+                <span>Menu</span>
+            </a>
+        </div>
+    </header>
+<main class="main">
+    <div class="responsive-wrapper">
+        <div class="main-header">
+            <h1>Services Dashboard</h1>
+        </div>
+        <div class="content-header">
+            <div class="content-header-intro">
+                <h2>Intergrations and connected apps</h2>
+                <p>Supercharge your workflow and connect the tool you use every day.</p>
+            </div>
+            <div class="content-header-actions">
+                <a href="#" class="button">
+                    <i class="ph-faders-bold"></i>
+                    <span>Filters</span>
+                </a>
+                <a href="https://aahent.com/contact-us/" class="button">
+                    <i class="ph-plus-bold"></i>
+                    <span>Request for a call?</span>
+                </a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-panel">
+                <div class="vertical-tabs">
+                    <a href="#" class="active" id="view-all">View all</a>
+                    <a href="#" id="frontend">Frontend</a>
+                    <a href="#" id="backend">Backend</a>
+                    <a href="#" id="devops">DevOps</a>
+                    <a href="#">Marketplace</a>
+                </div>
+            </div>
+            <div class="content-main">
+                <div class="card-grid">
+                    <article class="card frontend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Compute/EC2.svg" alt="EC2 Logo" /></span>
+                                <h3>Amazon EC2</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Collaboration between designers and developers.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/launchec2">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card frontend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Storage/Simple-Storage-Service.svg" alt="S3 Logo" /></span>
+                                <h3>Amazon S3</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Scalable object storage for data of any size and type.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/s3">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card frontend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/App-Integration/Simple-Queue-Service.svg" alt="SQS Logo" /></span>
+                                <h3>Amazon SQS</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Reliable, highly scalable message queuing for any use case.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/sqs">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card frontend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/App-Integration/Simple-Notification-Service.svg" alt="SNS Logo" /></span>
+                                <h3>Amazon SNS</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Highly scalable and cost-effective push notifications.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/sns">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card frontend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Business-Applications/Simple-Email-Service.svg" alt="SES Logo" /></span>
+                                <h3>Amazon SES</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Cost-effective email sending service for marketing and transactional emails.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/ses">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card backend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Database/DynamoDB.svg" alt="DynamoDB Logo" /></span>
+                                <h3>Amazon DynamoDB</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Fast and scalable NoSQL database for any application.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/dynamodb">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card backend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Security-Identity-Compliance/IAM-Identity-Center.svg" alt="IAM Logo" /></span>
+                                <h3>AWS IAM</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Manage access to AWS services and resources securely.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/iam">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card backend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Networking-Content-Delivery/Virtual-Private-Cloud.svg" alt="VPC Logo" /></span>
+                                <h3>Amazon VPC</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Isolated network environments in the AWS cloud.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/vpc">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card backend">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Networking-Content-Delivery/Elastic-Load-Balancing.svg" alt="LB Logo" /></span>
+                                <h3>Amazon LB</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Distribute traffic across multiple targets.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/lb">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card devops">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Containers/ECS-Anywhere.svg" alt="ECS Logo" /></span>
+                                <h3>Amazon ECS</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Run and manage Docker containers at scale.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/ecs">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card devops">
+    <div class="card-header">
+        <div>
+            <span><img src="https://icon.icepanel.io/AWS/svg/Management-Governance/CloudFormation.svg" alt="IaC Tools Logo" /></span>
+            <h3>(IaC)/CloudFormation</h3>
+        </div>
+        <label class="toggle">
+            <input type="checkbox" checked>
+            <span></span>
+        </label>
+    </div>
+    <div class="card-body">
+        <p>Manage infrastructure using code (e.g., Terraform, AWS CloudFormation) for consistency and repeatability.</p>
+    </div>
+    <div class="card-footer">
+        <a href="http://127.0.0.1:5000/cloudformation">View integration</a>
+    </div>
+</article>
+                    <article class="card devops">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Developer-Tools/CodeBuild.svg" alt="CodeBuild Logo" /></span>
+                                <h3>CodeBuild</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Fully managed continuous integration service.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/codebuild">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card devops">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Developer-Tools/CodeCommit.svg" alt="Git Logo" /></span>
+                                <h3>CodeCommit</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Distributed version control system for tracking code changes.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/codecommit">View integration</a>
+                        </div>
+                    </article>
+                    <article class="card devops">
+                        <div class="card-header">
+                            <div>
+                                <span><img src="https://icon.icepanel.io/AWS/svg/Developer-Tools/CodeDeploy.svg" alt="CodeDeploy Logo" /></span>
+                                <h3>CodeDeploy</h3>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" checked>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="card-body">
+                            <p>Automate software deployments to any instance.</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="http://127.0.0.1:5000/codedeploy">View integration</a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const categoryLinks = document.querySelectorAll(".vertical-tabs a");
+    const cards = document.querySelectorAll(".card");
+
+    categoryLinks.forEach(link => {
+        link.addEventListener("click", function(event) {
+            event.preventDefault();
+            categoryLinks.forEach(link => link.classList.remove("active"));
+            this.classList.add("active");
+
+            const category = this.id;
+            if (category === "view-all") {
+                cards.forEach(card => card.style.display = "block");
+            } else {
+                cards.forEach(card => {
+                    if (card.classList.contains(category)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            }
+        });
+    });
+});
+        document.getElementById('profile-avatar').addEventListener('click', function(event) {
+            event.preventDefault();
+            var profileCard = document.getElementById('profile-card');
+            if (profileCard.style.display === 'block') {
+                profileCard.style.display = 'none';
+            } else {
+                profileCard.style.display = 'block';
+            }
+        });
+
+        // Hide profile card when clicking outside
+        document.addEventListener('click', function(event) {
+            var profileCard = document.getElementById('profile-card');
+            var avatar = document.getElementById('profile-avatar');
+            if (!avatar.contains(event.target) && !profileCard.contains(event.target)) {
+                profileCard.style.display = 'none';
+            }
+        });
+
+    </script>
+</body>
+</html>

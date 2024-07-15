@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create VPC</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+</head>
+<body>
+    <h1>Create VPC</h1>
+    <form id="vpcForm" action="/create_vpc" method="post">
+        <label for="cidr_block">CIDR Block:</label>
+        <input type="text" id="cidr_block" name="cidr_block">
+        <button type="submit">Create VPC</button>
+    </form>
+    <div id="response"></div>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>

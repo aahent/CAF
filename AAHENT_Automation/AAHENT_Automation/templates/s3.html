@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3 Bucket Manager</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>S3 Bucket Manager</h1>
+        
+        <div class="form-container">
+            <h2>Create Bucket</h2>
+            <button id="createBucketBtn">Create Bucket</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Delete Bucket</h2>
+            <input type="text" id="deleteBucketName" placeholder="Bucket Name">
+            <button id="deleteBucketBtn">Delete Bucket</button>
+            
+            <h2>Upload File</h2>
+            <input type="text" id="uploadBucketName" placeholder="Bucket Name">
+            <button id="uploadFileBtn">Upload the File</button>
+            
+            <input type="file" id="fileInput">
+        </div>
+
+        <div id="response"></div>
+    </div>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>

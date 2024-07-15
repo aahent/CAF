@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Management Dashboard</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <h1>Cloud Management Dashboard</h1>
+    <div class="card-container">
+        <div class="card">
+            <h2>EC2 Manager</h2>
+            <p>Manage your EC2 instances, launch new instances, list existing ones, and perform operations like start, stop, and terminate.</p>
+            <button onclick="location.href='http://127.0.0.1:5000/launchec2'">Go to EC2 Manager</button>
+        </div>
+        <div class="card">
+            <h2>Create VPC</h2>
+            <p>Create and manage your Virtual Private Clouds (VPCs), define CIDR blocks, and customize your networking setup.</p>
+            <button onclick="location.href='http://127.0.0.1:5000/vpc'">Go to VPC Manager</button>
+        </div>
+
+
+        <div class="card">
+            <h2>Create Buckets</h2>
+            <p>Create and manage your s3.</p>
+            <button onclick="location.href='http://127.0.0.1:5000/s3'">check s3</button>
+        </div>
+    </div>
+
+    
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon ECS Management</title>
+    <style>
+        body {
+    font-family: Monospace;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+h1 {
+    color: Black;
+    padding: 20px 0;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 20%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#cluster-list {
+    text-align: left;
+    margin-top: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Amazon ECS Management</h1>
+
+    <div class="container">
+        <h2>Create Cluster</h2>
+        <form id="create-cluster-form">
+            <label for="create-cluster-name">Cluster Name:</label>
+            <input type="text" id="create-cluster-name" name="cluster_name" required>
+            <button type="submit">Create Cluster</button>
+        </form>
+
+        <h2>Delete Cluster</h2>
+        <form id="delete-cluster-form">
+            <label for="delete-cluster-name">Cluster Name:</label>
+            <input type="text" id="delete-cluster-name" name="cluster_name" required>
+            <button type="submit">Delete Cluster</button>
+        </form>
+
+        <h2>List Clusters</h2>
+        <button id="list-clusters-button">List Clusters</button>
+        <div id="cluster-list"></div>
+    </div>
+
+    <script>
+        function showAlert(message, type = 'info') {
+    const alertBox = document.createElement('div');
+    alertBox.className = `alert alert-${type}`;
+    alertBox.textContent = message;
+
+    document.body.prepend(alertBox);
+
+    setTimeout(() => {
+        alertBox.remove();
+    }, 3000);
+}
+
+document.getElementById('create-cluster-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/ecs/create_cluster', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            cluster_name: formData.get('cluster_name')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Create Cluster Response:', data);
+        if (data.error) {
+            showAlert('Error: ' + data.error, 'danger');
+        } else {
+            showAlert('Cluster created successfully!', 'success');
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('delete-cluster-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/ecs/delete_cluster', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            cluster_name: formData.get('cluster_name')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete Cluster Response:', data);
+        if (data.error) {
+            showAlert('Error: ' + data.error, 'danger');
+        } else {
+            showAlert('Cluster deleted successfully!', 'success');
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+document.getElementById('list-clusters-button').addEventListener('click', function () {
+    fetch('/ecs/list_clusters')
+    .then(response => response.json())
+    .then(data => {
+        console.log('List Clusters Response:', data);
+        const clusterList = document.getElementById('cluster-list');
+        clusterList.innerHTML = '';
+        data.clusterArns.forEach(cluster => {
+            const clusterElement = document.createElement('div');
+            clusterElement.textContent = cluster;
+            clusterList.appendChild(clusterElement);
+        });
+        showAlert('Clusters listed successfully!', 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred. Please try again.', 'danger');
+    });
+});
+
+    </script>
+</body>
+</html>

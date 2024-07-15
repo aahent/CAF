@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CodeCommit API</title>
+    <style>
+        body {
+    font-family: Monospace;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    width: 40%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    font-family: Monospace;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#listReposResponse {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    white-space:
+    re-wrap;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AWS CodeCommit API</h1>
+
+        <h2>Create a New Repository</h2>
+        <form id="createRepoForm">
+            <label for="repoName">Repository Name:</label>
+            <input type="text" id="repoName" name="repositoryName" required>
+
+            <label for="repoDescription">Description:</label>
+            <input type="text" id="repoDescription" name="repositoryDescription">
+
+            <button type="submit">Create Repository</button>
+        </form>
+
+        <h2>Get Repository Information</h2>
+        <form id="getRepoForm">
+            <label for="getRepoName">Repository Name:</label>
+            <input type="text" id="getRepoName" name="repositoryName" required>
+
+            <button type="submit">Get Repository</button>
+        </form>
+
+        <h2>Delete a Repository</h2>
+        <form id="deleteRepoForm">
+            <label for="deleteRepoName">Repository Name:</label>
+            <input type="text" id="deleteRepoName" name="repositoryName" required>
+
+            <button type="submit">Delete Repository</button>
+        </form>
+
+        <h2>List All Repositories</h2>
+        <button id="listReposBtn">List Repositories</button>
+        <div id="listReposResponse"></div>
+    </div>
+
+    <script>
+        // Function to handle form submissions and API requests
+
+// Create Repository Form Submission
+document.getElementById('createRepoForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/create-repo', {
+        method: 'POST',
+        body: JSON.stringify({
+            repositoryName: formData.get('repositoryName'),
+            repositoryDescription: formData.get('repositoryDescription')
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Create Repository Response:', data);
+        // Handle response display or any other action
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert('Repository created successfully!');
+            // Optionally, reset the form
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// Get Repository Form Submission
+document.getElementById('getRepoForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const repoName = document.getElementById('getRepoName').value.trim();
+
+    fetch(`/get-repo?repositoryName=${encodeURIComponent(repoName)}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log('Get Repository Response:', data);
+        // Handle response display or any other action
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert(`Repository: ${data.repositoryMetadata.repositoryName}\nDescription: ${data.repositoryMetadata.repositoryDescription}`);
+            // Optionally, clear the form field
+            document.getElementById('getRepoName').value = '';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// Delete Repository Form Submission
+document.getElementById('deleteRepoForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/delete-repo', {
+        method: 'DELETE',
+        body: JSON.stringify({
+            repositoryName: formData.get('repositoryName')
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete Repository Response:', data);
+        // Handle response display or any other action
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert('Repository deleted successfully!');
+            // Optionally, reset the form
+            this.reset();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// List Repositories Button Click
+document.getElementById('listReposBtn').addEventListener('click', function(event) {
+    fetch('/list-repos')
+    .then(response => response.json())
+    .then(data => {
+        console.log('List Repositories Response:', data);
+        // Display the list of repositories in listReposResponse div
+        const reposList = data.repositories.map(repo => `<p>${repo.repositoryName}</p>`).join('');
+        document.getElementById('listReposResponse').innerHTML = reposList;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+    </script>
+</body>
+</html>

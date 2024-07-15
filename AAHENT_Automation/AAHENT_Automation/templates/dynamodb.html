@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DynamoDB Manager</title>
+    <style>
+        body {
+    font-family: Monospace;
+    margin: 20px;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input, textarea {
+    margin: 10px 0;
+    padding: 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: Monospace;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <h1>DynamoDB Manager</h1>
+
+    <h2>Create Table</h2>
+    <form id="createTableForm">
+        <input type="text" id="createTableName" placeholder="Table Name" required>
+        <input type="text" id="keyAttributeName" placeholder="Key Attribute Name" required>
+        <input type="text" id="keyAttributeType" placeholder="Key Attribute Type (S, N, B)" required>
+        <input type="text" id="keyType" placeholder="Key Type (HASH or RANGE)" required>
+        <input type="number" id="readCapacityUnits" placeholder="Read Capacity Units" required>
+        <input type="number" id="writeCapacityUnits" placeholder="Write Capacity Units" required>
+        <button type="submit">Create Table</button>
+    </form>
+
+    <h2>Insert Item</h2>
+    <form id="insertItemForm">
+        <input type="text" id="insertTableName" placeholder="Table Name" required>
+        <input type="text" id="itemKey" placeholder="Item Key" required>
+        <input type="text" id="itemValue" placeholder="Item Value" required>
+        <button type="submit">Insert Item</button>
+    </form>
+
+    <h2>Get Item</h2>
+    <form id="getItemForm">
+        <input type="text" id="getTableName" placeholder="Table Name" required>
+        <input type="text" id="getItemKey" placeholder="Item Key" required>
+        <input type="text" id="getItemKeyValue" placeholder="Item Key Value" required>
+        <button type="submit">Get Item</button>
+    </form>
+
+    <h2>Delete Item</h2>
+    <form id="deleteItemForm">
+        <input type="text" id="deleteTableName" placeholder="Table Name" required>
+        <input type="text" id="deleteItemKey" placeholder="Item Key" required>
+        <input type="text" id="deleteItemKeyValue" placeholder="Item Key Value" required>
+        <button type="submit">Delete Item</button>
+    </form>
+
+    <h2>Delete Table</h2>
+    <form id="deleteTableForm">
+        <input type="text" id="deleteTableNameOnly" placeholder="Table Name" required>
+        <button type="submit">Delete Table</button>
+    </form>
+
+    <script>
+        document.getElementById('createTableForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const tableName = document.getElementById('createTableName').value;
+    const keyAttributeName = document.getElementById('keyAttributeName').value;
+    const keyAttributeType = document.getElementById('keyAttributeType').value;
+    const keyType = document.getElementById('keyType').value;
+    const readCapacityUnits = parseInt(document.getElementById('readCapacityUnits').value);
+    const writeCapacityUnits = parseInt(document.getElementById('writeCapacityUnits').value);
+
+    const keySchema = [{ AttributeName: keyAttributeName, KeyType: keyType }];
+    const attributeDefinitions = [{ AttributeName: keyAttributeName, AttributeType: keyAttributeType }];
+    const provisionedThroughput = { ReadCapacityUnits: readCapacityUnits, WriteCapacityUnits: writeCapacityUnits };
+
+    fetch('/create_table', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            table_name: tableName,
+            key_schema: keySchema,
+            attribute_definitions: attributeDefinitions,
+            provisioned_throughput: provisionedThroughput
+        })
+    }).then(response => response.json()).then(data => alert(data.message));
+});
+
+document.getElementById('insertItemForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const tableName = document.getElementById('insertTableName').value;
+    const itemKey = document.getElementById('itemKey').value;
+    const itemValue = document.getElementById('itemValue').value;
+    
+    const item = {};
+    item[itemKey] = itemValue;
+
+    fetch('/insert_item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table_name: tableName, item: item })
+    }).then(response => response.json()).then(data => alert(data.message));
+});
+
+document.getElementById('getItemForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const tableName = document.getElementById('getTableName').value;
+    const itemKey = document.getElementById('getItemKey').value;
+    const itemKeyValue = document.getElementById('getItemKeyValue').value;
+    
+    const key = {};
+    key[itemKey] = itemKeyValue;
+
+    fetch(`/get_item?table_name=${tableName}&key=${encodeURIComponent(JSON.stringify(key))}`, {
+        method: 'GET'
+    }).then(response => response.json()).then(data => alert(JSON.stringify(data)));
+});
+
+document.getElementById('deleteItemForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const tableName = document.getElementById('deleteTableName').value;
+    const itemKey = document.getElementById('deleteItemKey').value;
+    const itemKeyValue = document.getElementById('deleteItemKeyValue').value;
+    
+    const key = {};
+    key[itemKey] = itemKeyValue;
+
+    fetch('/delete_item', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table_name: tableName, key: key })
+    }).then(response => response.json()).then(data => alert(data.message));
+});
+
+document.getElementById('deleteTableForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const tableName = document.getElementById('deleteTableNameOnly').value;
+    
+    fetch('/delete_table', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table_name: tableName })
+    }).then(response => response.json()).then(data => alert(data.message));
+});
+
+    </script>
+</body>
+</html>
