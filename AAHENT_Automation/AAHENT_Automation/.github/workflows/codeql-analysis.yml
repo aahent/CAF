@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python' ] # Add other languages you need to scan
+        language: [ 'python' ]
 
     steps:
       - name: Checkout repository
